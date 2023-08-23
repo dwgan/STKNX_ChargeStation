@@ -1,0 +1,5 @@
+Attention:
+ 1) This 2K source bases on stm32fxxx, if MCU is changed, Knx_InternalData.h should be changed according to the cpu's flash address and erase sector.
+    #define FLASH_PAGE_SIZE                   2048
+    #define KNX_SYSDATA_REAL_BASE             0x08004000
+ 2) Knx_M0705.h may be changed for allocating flash resource.

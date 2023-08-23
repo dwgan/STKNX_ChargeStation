@@ -1,0 +1,110 @@
+/****** KNX产品采用MLK系列CPU的资源配置文件 *************/
+
+/****** 通用标号宏定义 ***************/
+
+/* 整个CPU可寻址空间 */
+define symbol TOTAL_MEM_SPACE = 4G;
+
+/* 定义堆栈大小 */
+define symbol HEAP_SIZE  = 2048;                             /* 需要根据实际需要调整 */
+define symbol STACK_SIZE = 2048;                             /* 需要根据实际需要调整 */
+
+/* FLASH起始地址和结束地址 */
+define exported symbol CPU_FLASH_SIZE  = 128*1024;                                        /* 更换CPU需要修改该值。071CB - 2k sector */
+define exported symbol CPU_FLASH_START = 0x08000000;                                      /* start address of ROM. */
+define exported symbol CPU_FLASH_END   = (CPU_FLASH_START + CPU_FLASH_SIZE - 1);          /* Rom start from 0x08000000,End at 0x0805ffff */
+
+/* RAM起始地址和结束地址 */
+define symbol CPU_RAM_SIZE  = (36*1024);                               /* CPU的内存大小，改变CPU需要更改该数据。 */
+define symbol CPU_RAM_START = 0x20000000;                              /* stm32f's ram start from 0x20000000     */
+define symbol CPU_RAM_END   = (0x20000000 + CPU_RAM_SIZE - 1);
+
+/* 定义中断向量起始起始地址 */
+define symbol VECTOR_TABLE_START            = CPU_FLASH_START;
+define exported symbol __VECTOR_TABLE       = VECTOR_TABLE_START;     /* vector table start address. */
+define exported symbol __BOOT_STACK_ADDRESS = CPU_RAM_END - 7;        /* the start STACK address load by SP.  */
+
+/* 定义应用代码空间起始地址1 */
+define symbol APP_CODE_START1    = CPU_FLASH_START;
+define symbol APP_CODE_END1      = (CPU_FLASH_START + 0x00003fff);
+
+/* 定义用户数据起始地址  */
+define symbol KNX_USER_EE_START  = (CPU_FLASH_START + 0x00004000);
+define symbol KNX_USER_EE_END    = (CPU_FLASH_START + 0x00005fff);
+
+/* 定义协议栈空间2-1  */
+define symbol APP_CODE_START2_1  = (CPU_FLASH_START + 0x00006000);
+define symbol APP_CODE_END2_1    = (CPU_FLASH_START + 0x0000afff);
+
+/* 定义系统数据起始地址 */
+define symbol KNX_SYS_EE_START = (CPU_FLASH_START + 0x0000b000);
+define symbol KNX_SYS_EE_END   = (CPU_FLASH_START + 0x0000bfff);
+
+/* 定义记录表起始地址 */
+define symbol KNX_RECTABLE_START = (CPU_FLASH_START + 0x0000c000);
+define symbol KNX_RECTABLE_END   = (CPU_FLASH_START + 0x0000c7ff);
+
+/* 定义KNX协议栈代码起始空间 */
+define symbol KNX_PROTOCOL_START = (CPU_FLASH_START + 0x0000c800);
+define symbol KNX_PROTOCOL_END   = (CPU_FLASH_START + 0x0000fe7f);
+
+/* KNX协议栈API接口存储空间 */
+define symbol KNX_API_START = (CPU_FLASH_START + 0x0000fe80);
+define symbol KNX_API_END   = (CPU_FLASH_START + 0x0000ffff);
+
+/* 定义协议栈空间2-1 */
+define symbol APP_CODE_START2_2  = (CPU_FLASH_START + 0x00010000);
+define symbol APP_CODE_END2_2    = (CPU_FLASH_START + 0x0001ffff);
+
+/* 定义起始地址 */
+define symbol Code_Start    = CPU_FLASH_START;  /* 跨过FLASH的头部，存放的FLASH配置数据。 */
+
+/*------------------------- FLASH&RAM资源分区 --------------------------------*/
+
+/* 定义整个寻址空间存储区 */
+define memory Memory with size = TOTAL_MEM_SPACE;
+
+/* 定义应用代码存储区 */
+define region App_Code_Region = Memory:[from APP_CODE_START2_2 to APP_CODE_END2_2];
+
+/* 定义KNX协议栈代码存储区 */
+define region Knx_Protocol_Region = Memory:[from KNX_PROTOCOL_START to KNX_PROTOCOL_END]|Memory:[from APP_CODE_START1 to APP_CODE_END1]|Memory:[from APP_CODE_START2_1 to APP_CODE_END2_1];
+
+/* 定义KNX记录表存储区 */
+define region RecTable_Region = Memory:[from KNX_RECTABLE_START to KNX_RECTABLE_END];
+
+/* 定义KNX用户数据存储区 */
+define region KnxUser_Ee_Region = Memory:[from KNX_USER_EE_START to KNX_USER_EE_END];
+
+/* 定义KNX系统数据存储区 */
+define region KnxSys_Ee_Region = Memory:[from KNX_SYS_EE_START to KNX_SYS_EE_END];
+
+/* API segment area define. */
+define region KnxApi_Region = Memory:[from KNX_API_START to KNX_API_END];
+
+/* 定义RAM存储区 */
+define region SRAM_Region = Memory:[from CPU_RAM_START to CPU_RAM_END];
+
+/* 定义堆和栈 */
+define block CSTACK    with alignment = 8, size = STACK_SIZE { };
+define block HEAP      with alignment = 8, size = HEAP_SIZE  { };
+define block CodeRelocate    { section .textrw_init };            /* for IAR */
+define block CodeRelocateRam { section .textrw };                 /* for IAR */
+
+/*------------------资源分段--------------------------*/
+initialize by copy  { readwrite };
+initialize manually { section .data};
+initialize manually { section .textrw };
+do not initialize   { section .noinit };
+
+place at address Memory:VECTOR_TABLE_START { readonly section .intvec };
+place at address Memory:Code_Start         { readonly section .noinit };
+place in App_Code_Region     { readonly section APP_INTERNAL_SEG, block CodeRelocate , readonly section APP_INTERNAL_CONST_SEG };
+place in Knx_Protocol_Region { readonly };
+place in RecTable_Region     { readonly section REC_TABLE_SEG };
+place in KnxUser_Ee_Region   { readonly section USER_EE_SEC   };
+place in KnxSys_Ee_Region    { readonly section SYS_EE_SEG    };
+place in KnxApi_Region       { readonly section KNX_API_SEG   };
+place in SRAM_Region         { readwrite, block CodeRelocateRam, block CSTACK, block HEAP };
+
+/* end of icf */
