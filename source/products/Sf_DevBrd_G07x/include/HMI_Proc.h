@@ -14,9 +14,9 @@ extern "C" {
 #define HMI_CONNECTED_GPIO_MODER_MODER          GPIO_MODER_MODER8_0
   
 #define NFC_TAG_GPIO                      GPIOB
-#define NFC_TAG_PIN                       GPIO_PIN_9
-#define NFC_TAG_GPIO_PUPDR_PUPDR          GPIO_PUPDR_PUPDR9_0
-#define NFC_TAG_GPIO_MODER_MODER          GPIO_MODER_MODER9_0
+#define NFC_TAG_PIN                       GPIO_PIN_13
+#define NFC_TAG_GPIO_PUPDR_PUPDR          GPIO_PUPDR_PUPDR13_0
+#define NFC_TAG_GPIO_MODER_MODER          GPIO_MODER_MODER13_0
 
 #define KNX_PowerStateON  0xff
 #define KNX_PowerStateOFF 0x00

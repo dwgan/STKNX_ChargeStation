@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\Desktop\STKNX_EvaluationBoard\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.general.xcl" --backend -f "D:\Desktop\STKNX_EvaluationBoard\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\IAR Workspace\STKNX_ChargeStation\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.general.xcl" --backend -f "D:\IAR Workspace\STKNX_ChargeStation\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\Desktop\STKNX_EvaluationBoard\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\Desktop\STKNX_EvaluationBoard\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\IAR Workspace\STKNX_ChargeStation\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\IAR Workspace\STKNX_ChargeStation\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.driver.xcl" 
 
 @echo off 
 :end

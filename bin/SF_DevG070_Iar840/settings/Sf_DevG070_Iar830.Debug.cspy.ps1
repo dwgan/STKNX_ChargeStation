@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\Desktop\STKNX_EvaluationBoard\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.general.xcl" --backend -f "D:\Desktop\STKNX_EvaluationBoard\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\IAR Workspace\STKNX_ChargeStation\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.general.xcl" --backend -f "D:\IAR Workspace\STKNX_ChargeStation\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\Desktop\STKNX_EvaluationBoard\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\Desktop\STKNX_EvaluationBoard\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\IAR Workspace\STKNX_ChargeStation\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\IAR Workspace\STKNX_ChargeStation\bin\SF_DevG070_Iar840\settings\Sf_DevG070_Iar830.Debug.driver.xcl" 
 }
