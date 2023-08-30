@@ -21,7 +21,8 @@ extern "C" {
 #define KNX_PowerStateON  0xff
 #define KNX_PowerStateOFF 0x00
 
-#define HMI_LOOP_PERIOD 100 //HMI Loop Period, 100 ms
+#define HMI_LOOP_PERIOD  100 //HMI Loop Period, 100 ms
+#define HMI_RERUN_PERIOD 1000*60*2 //HMI Restart to charge period, 2 minutes
   
 #define CommandLen 8
 

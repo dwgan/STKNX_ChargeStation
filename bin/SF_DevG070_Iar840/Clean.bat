@@ -6,8 +6,10 @@ for %%i in (*) do (
     REM 检查文件扩展名，如果不是 .ewp, .eww 或 .bat 则删除
     if "%%~xi" neq ".ewp" (
         if "%%~xi" neq ".eww" (
-            if "%%~xi" neq ".bat" (
-                del "%%i"
+            if "%%~xi" neq ".ewd" (
+				if "%%~xi" neq ".bat" (
+					del "%%i"
+				)
             )
         )
     )

@@ -10,6 +10,7 @@
 #include "SerialProc.h"
 #include "Rec_Table.h"
 #include "App_Api.h"
+#include <time.h>
 
 
 
@@ -69,10 +70,11 @@ void HMI_Init()
  */
 void Battery_Info_Get()
 {
+    srand((unsigned int)SysTick->VAL);
     HMI_StateValue.batterypercent = rand() % 20 + 10;
     HMI_StateValue.batteryupdateflag = 1;
 
-    HMI_StateValue.temperature = rand() % 20 + 350;
+    HMI_StateValue.temperature = rand() % 40 + 350;
     HMI_StateValue.temperatureflag = 1;
 
     uint16_t current = 12000;
@@ -185,7 +187,6 @@ static void HMI_DispInfoStateMachine_Update()
 {
     uint8_t UartDataBuff[RTXBUFFLEN];
     unsigned char length;
-    static BYTE connectionstatusBackup;
 
     /*******************update the state to HMI*********************/
     if ( HMI_StateValue.connectionstatus == FALSE ) // the power cable is disconnected
@@ -196,19 +197,9 @@ static void HMI_DispInfoStateMachine_Update()
         serialData2Buff_Write( UartDataBuff, length );
         length = sprintf( ( char* )UartDataBuff, "%s=%d\xff\xff\xff", "runningstatus", ( unsigned int )( ( HMI_StateValue.runningstatus ) ) );
         serialData2Buff_Write( UartDataBuff, length );
-        connectionstatusBackup = HMI_StateValue.connectionstatus;
     }
     else // the power cable is connected
     {
-        if ( !connectionstatusBackup )
-        {
-            Battery_Info_Get();
-            connectionstatusBackup = HMI_StateValue.connectionstatus;
-        }
-        else
-        {
-            connectionstatusBackup = HMI_StateValue.connectionstatus;
-        }
         if ( HMI_StateValue.runningstatus == TRUE ) // the battery is charging
         {
             // update connectionstatus to HMI
@@ -225,6 +216,8 @@ static void HMI_DispInfoStateMachine_Update()
                               ( unsigned int )( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) ) % 1000 );
             serialData2Buff_Write( UartDataBuff, length );
             // update batterypercent to HMI
+            length = sprintf( ( char* )UartDataBuff, "%s=%d\xff\xff\xff", "j0val", ( unsigned int )HMI_StateValue.batterypercent );
+            serialData2Buff_Write( UartDataBuff, length );
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d%%\"\xff\xff\xff", "t4", ( unsigned int )HMI_StateValue.batterypercent );
             serialData2Buff_Write( UartDataBuff, length );
             // update chargedtime to HMI
@@ -326,6 +319,72 @@ void HMI_DispInfoChange_Update()
 }
 
 /**
+ * @description: Start to charge
+ * @param {none} 
+ * @return: none
+ * @date 2023/8/21
+ */
+void HMI_ResumeCharge()
+{
+    HMI_StateValue.runningstatus = TRUE;
+    HMI_StateValue.runningupdateflag = 1;
+    HMI_StateValue.connectupdateflag = 1;
+}
+
+/**
+ * @description: Start to charge
+ * @param {none} 
+ * @return: none
+ * @date 2023/8/21
+ */
+void HMI_PauseCharge()
+{
+    HMI_StateValue.runningstatus = FALSE;
+    HMI_StateValue.runningupdateflag = 1;
+    HMI_StateValue.connectupdateflag = 1;
+}
+
+/**
+ * @description: HMI status update periodically
+    repeat period can be set according to HMI_RERUN_PERIOD
+ * @param {none} 
+ * @return: none
+ * @date 2023/8/21
+ */
+void HMI_StatusCycle()
+{
+    static BYTE connectionstatusBackup;
+    static WORD32 time=0;
+
+    if ( !connectionstatusBackup && HMI_StateValue.connectionstatus)
+    {
+        Battery_Info_Get();
+    }
+    connectionstatusBackup=HMI_StateValue.connectionstatus;
+      
+    // Start charging after few minutes if the cable is connected
+    if (HMI_StateValue.connectionstatus && !HMI_StateValue.runningstatus)
+    {
+        if (time < HMI_RERUN_PERIOD/HMI_LOOP_PERIOD)
+        {
+            time++;
+        }
+        else
+        {
+            Battery_Info_Get();
+            HMI_ResumeCharge();
+            time =0;
+        }
+    }
+    
+    //if (HMI_StateValue.batterypercent == 100)
+    //{
+    //    HMI_StateValue.runningstatus=0;
+    //    HMI_StateValue.runningupdateflag=1;
+    //}
+}
+
+/**
  * @description: Get the connetion status of the battery
  * @param {none} 
  * @return: none
@@ -352,6 +411,7 @@ void HMI_ConnectStatus_Get()
             HMI_StateValue.temperatureflag = 1;
             HMI_StateValue.batterypercent = 0;
             HMI_StateValue.batteryupdateflag = 1;
+            HMI_StateValue.runningstatus = 0;
         }
     }
     IO_Value_Backup = IO_Value;
@@ -373,9 +433,14 @@ void NFC_TAG_Status_Get()
     {
         if ( HMI_StateValue.connectionstatus )
         {
-            HMI_StateValue.runningstatus = !HMI_StateValue.runningstatus;
-            HMI_StateValue.runningupdateflag = 1;
-            HMI_StateValue.connectupdateflag = 1;
+            if (HMI_StateValue.runningstatus)
+            {
+                HMI_PauseCharge();
+            }
+            else
+            {
+                HMI_ResumeCharge();
+            }
         }
     }
     IO_Value_Backup = IO_Value;
@@ -410,15 +475,12 @@ static void HMI_CommandDecoder( uint8_t nByte )
             {
                 if ( HMI_StateValue.batterypercent < 100 )
                 {
-                    HMI_StateValue.runningstatus = TRUE;
-                    HMI_StateValue.runningupdateflag = 1;
-                    HMI_StateValue.connectupdateflag = 1;
+                    HMI_ResumeCharge();
                 }
             }
             else if ( *( Buff + 1 ) == 0x78 && *( Buff + 2 ) == 0x56 && *( Buff + 3 ) == 0x34 && *( Buff + 4 ) == 0x12 )
             {
-                HMI_StateValue.runningupdateflag = 1;
-                HMI_StateValue.runningstatus = FALSE;
+                HMI_PauseCharge();
             }
             pos = 0;
             memset( Buff, 0, CommandLen );
@@ -445,6 +507,33 @@ void HAL_UART_RxCpltCallback( UART_HandleTypeDef *huart )
 }
 
 /**
+ * @description: Run HMI tasks
+ * @param {none} 
+ * @return: none
+ * @date 2023/8/30
+ */
+void HMI_TaskRun()
+{
+    HMI_TimeData_Update();
+    Battery_ChargeInfo_Calculate();
+    HMI_DispInfoStateMachine_Update();
+    HMI_DispInfoChange_Update();
+    HMI_StatusCycle();
+}
+
+/**
+ * @description: HMI event process
+ * @param {none} 
+ * @return: none
+ * @date 2023/8/30
+ */
+void HMI_EventProcess()
+{
+    HMI_ConnectStatus_Get();
+    NFC_TAG_Status_Get();
+}
+
+/**
  * @description: Main loop of the HMI system and logic control, this function 
     should be called per ms.
  * @param {type} receive byte
@@ -457,12 +546,8 @@ void HMI_UpatePeriodical_Call()
     if ( API_KnxTm_GetDelayMs( TimesMsRef ) >= HMI_LOOP_PERIOD )
     {
         TimesMsRef = API_KnxTm_GetTimeMs();
-
-        HMI_TimeData_Update();
-        Battery_ChargeInfo_Calculate();
-        HMI_DispInfoStateMachine_Update();
-        HMI_DispInfoChange_Update();
-        HMI_ConnectStatus_Get();
-        NFC_TAG_Status_Get();
+        
+        HMI_TaskRun();
+        HMI_EventProcess();
     }
 }
