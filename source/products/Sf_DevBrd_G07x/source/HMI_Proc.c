@@ -375,6 +375,7 @@ void NFC_TAG_Status_Get()
         {
             HMI_StateValue.runningstatus = !HMI_StateValue.runningstatus;
             HMI_StateValue.runningupdateflag = 1;
+            HMI_StateValue.connectupdateflag = 1;
         }
     }
     IO_Value_Backup = IO_Value;
