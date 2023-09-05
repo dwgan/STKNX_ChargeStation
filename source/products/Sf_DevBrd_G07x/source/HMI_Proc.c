@@ -125,14 +125,14 @@ void Battery_ChargeInfo_Calculate()
         }
     }
     
-    if ( HMI_StateValue.currentvalue[0] == 0 && HMI_StateValue.currentvalue[1] == 0 )
-    {
-        HMI_StateValue.remainchargetime = 0;
-    }
-    else
-    {
-        HMI_StateValue.remainchargetime = 1 + ( HMI_StateValue.fullcapacity - HMI_StateValue.currentcapacity ) * 60 / ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) / 220;
-    }
+//    if ( HMI_StateValue.currentvalue[0] == 0 && HMI_StateValue.currentvalue[1] == 0 )
+//    {
+//        HMI_StateValue.remainchargetime = 0;
+//    }
+//    else
+//    {
+//        HMI_StateValue.remainchargetime = 1 + ( HMI_StateValue.fullcapacity - HMI_StateValue.currentcapacity ) * 60 / ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) / 220;
+//    }
     
     static WORD16 currentValBak;
     if ( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) != currentValBak )
@@ -235,7 +235,7 @@ static void HMI_DispInfoStateMachine_Update()
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%dmin\"\xff\xff\xff", "t0", ( unsigned int )HMI_StateValue.chargedtime );
             serialData2Buff_Write( UartDataBuff, length );
             // update remainchargetime to HMI
-            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%dmin left\"\xff\xff\xff", "t3", ( unsigned int )HMI_StateValue.remainchargetime );
+            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"ACC01123456789\"\xff\xff\xff", "t3");//, ( unsigned int )HMI_StateValue.remainchargetime );
             serialData2Buff_Write( UartDataBuff, length );
             // update temperature to HMI
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d.%d¡æ\"\xff\xff\xff", "t5", \
@@ -265,7 +265,7 @@ static void HMI_DispInfoStateMachine_Update()
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"- - min\"\xff\xff\xff", "t0" );
             serialData2Buff_Write( UartDataBuff, length );
             // update remainchargetime to HMI
-            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"- - min left\"\xff\xff\xff", "t3" );
+            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"ACC01123456789\"\xff\xff\xff", "t3" );
             serialData2Buff_Write( UartDataBuff, length );
             // update temperature to HMI
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d.%d¡æ\"\xff\xff\xff", "t5", \
@@ -290,39 +290,27 @@ void HMI_DispInfoChange_Update()
     if ( ++timeVal >= 1000 / HMI_LOOP_PERIOD ) // increse TimesMsInc per 1 s
     {
         timeVal = 0;
-        if ( HMI_StateValue.runningstatus )
+        
+        if ( HMI_StateValue.connectionstatus )
         {
             if ( HMI_StateValue.batterypercent != HMI_StateValue_Backup.batterypercent )
             {
                 HMI_StateValue.batteryupdateflag = 1;
             }
-            else
-            {
-                HMI_StateValue.batteryupdateflag = 0;
-            }
+        }
+        if ( HMI_StateValue.runningstatus )
+        {
             if ( HMI_StateValue.chargedtime != HMI_StateValue_Backup.chargedtime )
             {
                 HMI_StateValue.chargedtimeflag = 1;
             }
-            else
-            {
-                HMI_StateValue.chargedtimeflag = 0;
-            }
-            if ( HMI_StateValue.remainchargetime != HMI_StateValue_Backup.remainchargetime )
-            {
-                HMI_StateValue.remaintimeflag = 1;
-            }
-            else
-            {
-                HMI_StateValue.remaintimeflag = 0;
-            }
+//            if ( HMI_StateValue.remainchargetime != HMI_StateValue_Backup.remainchargetime )
+//            {
+//                HMI_StateValue.remaintimeflag = 1;
+//            }
             if ( HMI_StateValue.currentvalue != HMI_StateValue_Backup.currentvalue )
             {
                 HMI_StateValue.currentcapacityupdateflag = 1;
-            }
-            else
-            {
-                HMI_StateValue.currentcapacityupdateflag = 0;
             }
         }
         HMI_StateValue_Backup = HMI_StateValue;
@@ -389,12 +377,6 @@ void HMI_StatusCycle()
             time =0;
         }
     }
-    
-    //if (HMI_StateValue.batterypercent == 100)
-    //{
-    //    HMI_StateValue.runningstatus=0;
-    //    HMI_StateValue.runningupdateflag=1;
-    //}
 }
 
 /**
@@ -418,8 +400,8 @@ void HMI_ConnectStatus_Get()
         {
             HMI_StateValue.chargedtime = 0;
             HMI_StateValue.chargedtimeflag = 1;
-            HMI_StateValue.remaintimeflag = 1;
-            HMI_StateValue.remainchargetime = 0;
+//            HMI_StateValue.remaintimeflag = 1;
+//            HMI_StateValue.remainchargetime = 0;
             HMI_StateValue.temperature = 0;
             HMI_StateValue.temperatureflag = 1;
             HMI_StateValue.batterypercent = 0;
@@ -452,6 +434,10 @@ void NFC_TAG_Status_Get()
             }
             else
             {
+                if ( HMI_StateValue.batterypercent >= 100 )
+                {
+                    Battery_Info_Get();
+                }
                 HMI_ResumeCharge();
             }
         }
