@@ -50,10 +50,10 @@ __root const T_COMOBJ_TABLE g_tComObjTable = \
 		{HI_BYTE(VALUE_REF_CO7),LOW_BYTE(VALUE_REF_CO7),COM_ALL|PRIO_LOW,TYPE_UINT16 }, //charge temperature			
 		{HI_BYTE(VALUE_REF_CO8),LOW_BYTE(VALUE_REF_CO8),COM_ALL|PRIO_LOW,TYPE_FLOAT }, //charged energy	4 bytes	
 		{HI_BYTE(VALUE_REF_CO9),LOW_BYTE(VALUE_REF_CO9),COM_ALL|PRIO_LOW,TYPE_DOUBLE }, //datetime 8 bytes
+	    {HI_BYTE(VALUE_REF_CO10),LOW_BYTE(VALUE_REF_CO10),COM_ALL|PRIO_LOW,TYPE_MAXDATA}, //charging ID 14 bytes
 
 	/* outputx communication object parameter. */
 		 
-		{HI_BYTE(VALUE_REF_CO10),LOW_BYTE(VALUE_REF_CO10),COM_ALL|PRIO_LOW,TYPE_UINT4}, //dimming RSC value
 		{HI_BYTE(VALUE_REF_CO11),LOW_BYTE(VALUE_REF_CO11),COM_ALL|PRIO_LOW,TYPE_UINT8 },//dimming ASC value
 
 		/*Temperature and Humidity communication boject*/
@@ -66,7 +66,7 @@ __root const T_COMOBJ_TABLE g_tComObjTable = \
 };
 /************* Application configure parameter area *******************************/
 /* switch type parameter virtual address define. */
-#pragma location = (IN1_SWFUNC_TYPE_REF + VIR_TO_REAL_OFFSET)
+#pragma location = (DEVICE_ID_REF + VIR_TO_REAL_OFFSET)
 __root const BYTE g_ucIn1Type = KNX_APP_TOGGLE;                             /* if this channel is working,it will always send ON. */
 
 #pragma location = (IN2_SWFUNC_TYPE_REF + VIR_TO_REAL_OFFSET)

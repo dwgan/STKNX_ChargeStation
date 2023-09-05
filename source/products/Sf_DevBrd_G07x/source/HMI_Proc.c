@@ -99,6 +99,7 @@ void Battery_ChargeInfo_Calculate()
     // Current Time calculation
     static WORD16 timeVal;
     static uint8_t second;
+    
     if ( ++timeVal > 1000 / HMI_LOOP_PERIOD ) // per second
     {
         timeVal = 0;
@@ -123,6 +124,7 @@ void Battery_ChargeInfo_Calculate()
             }
         }
     }
+    
     if ( HMI_StateValue.currentvalue[0] == 0 && HMI_StateValue.currentvalue[1] == 0 )
     {
         HMI_StateValue.remainchargetime = 0;
@@ -131,6 +133,15 @@ void Battery_ChargeInfo_Calculate()
     {
         HMI_StateValue.remainchargetime = 1 + ( HMI_StateValue.fullcapacity - HMI_StateValue.currentcapacity ) * 60 / ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) / 220;
     }
+    
+    static WORD16 currentValBak;
+    if ( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) != currentValBak )
+    {
+        HMI_StateValue.chargepower = 220 * ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 );
+        HMI_StateValue.chargepowerflag=1;
+    }
+    currentValBak =( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 );
+    
     HMI_StateValue.batterypercent = HMI_StateValue.currentcapacity  * 100 / HMI_StateValue.fullcapacity;
 }
 
@@ -329,6 +340,7 @@ void HMI_ResumeCharge()
     HMI_StateValue.runningstatus = TRUE;
     HMI_StateValue.runningupdateflag = 1;
     HMI_StateValue.connectupdateflag = 1;
+    HMI_StateValue.chargepowerflag = 1;
 }
 
 /**
@@ -342,6 +354,7 @@ void HMI_PauseCharge()
     HMI_StateValue.runningstatus = FALSE;
     HMI_StateValue.runningupdateflag = 1;
     HMI_StateValue.connectupdateflag = 1;
+    HMI_StateValue.chargepowerflag = 1;
 }
 
 /**

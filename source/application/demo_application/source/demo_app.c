@@ -301,12 +301,12 @@ void Demo_App_Out_Run( BYTE ucOutputNo )
     else if( ucData == KNX_APP_DIMMINGRSV )
     {
         /* get dimming output value co-obj's flag data. */
-        ucData = API_KnxAl_GetRamFlags( OUT_COM_OBJ_NO_RelativeDimming );
+        //   ucData = API_KnxAl_GetRamFlags(OUT_COM_OBJ_NO_RelativeDimming);
         /* check whether this co-obj's data was renewed. */
         if( ucData & CO_EXTERNAL_UPDATE )
         {
             /* Adjust the dimmer output based on the relative dimmer output value */
-            API_KnxAl_GetCoValue( OUT_COM_OBJ_NO_RelativeDimming, &ucData );
+            //    API_KnxAl_GetCoValue(OUT_COM_OBJ_NO_RelativeDimming,&ucData);
             updownflag = ucData & RSCUPDOWNMASK;
             dimmervalue = ucData & DIMMERVALUEMASK;
 
@@ -449,7 +449,7 @@ void Demo_App_Run( void )
 
     Demo_App_ChargeStationValue_Update();
 
-    Demo_App_SensorValue_Update();
+//	Demo_App_SensorValue_Update();
 
     SendUartStoreData();
     
@@ -523,6 +523,45 @@ void Demo_App_ChargeStationValue_Update( void )
     u8_t i;
 
     /* The following part was used to get command from KNX BUS*/
+
+
+    /* get CHARGE_RUNNING_STATUS_CO flag data. */
+    ucData = API_KnxAl_GetRamFlags( CHARGE_ID_CO );
+    /* check whether this co-obj's data was renewed. */
+    if( ucData & CO_EXTERNAL_UPDATE )
+    {
+        /*Get CHARGE_RUNNING_STATUS_CO value */
+        API_KnxAl_GetCoValue( CHARGE_ID_CO, &HMI_StateValue.chargerid[0] );
+
+
+        /*send position data to UART PORT  */
+        dataToUart[0] = ITEMTYPE_CHARGERID;
+        dataToUart[1] = 1;
+        for( i = 0; i < 14; i++ )
+        {
+            dataToUart[i + 2] = HMI_StateValue.chargerid[i];
+        }
+
+        serialProc_TxData( &dataToUart[0], 16 );
+
+        if( UartHandle.gState != HAL_UART_STATE_BUSY_TX )
+        {
+            UartSendingData[0] = mPlTxDataSize;
+            for( i = 0; i < mPlTxDataSize; i++ )
+            {
+                UartSendingData[i + 1] = mPlTxData[i];
+            }
+            UartSendData( &UartSendingData[1], UartSendingData[0] );
+            mPlTxDataSize = 0;
+        }
+        else
+        {
+            UartDataStore( &mPlTxData[0], mPlTxDataSize );
+            mPlTxDataSize = 0;
+        }
+    }
+
+
 
     /* get CHARGE_RUNNING_STATUS_CO flag data. */
     ucData = API_KnxAl_GetRamFlags( CHARGE_RUNNING_STATUS_CO );
@@ -635,7 +674,13 @@ void Demo_App_ChargeStationValue_Update( void )
         //}
     }
 
-
+    // for testing
+    if( ucData & CO_EXTERNAL_UPDATE )
+    {
+        API_KnxAl_GetCoValue( CHARGE_POWER_VALUE_CO, (BYTE*)&HMI_StateValue.chargepower );
+    }
+    
+    
     /*the following was used send OUT charge stations status to KNX BUS*/
 
     /* update the charge connection status to system**/
@@ -726,6 +771,48 @@ void Demo_App_ChargeStationValue_Update( void )
 
         HMI_StateValue.chargeenergyflag = 0;
     }
+    /*update the charge power*/
+    else if( HMI_StateValue.chargepowerflag== 1 )
+    {
+        *(float*)&dataTobus[0]=(float)HMI_StateValue.chargepower/1000;
+        swapEndian(dataTobus,4);
+        
+        API_KnxAl_SetCoValue( CHARGE_POWER_VALUE_CO, &dataTobus[0] );
+        /* send the switch co-obj's data. */
+        API_KnxAl_RequestValueWrite( CHARGE_POWER_VALUE_CO );
+
+        HMI_StateValue.chargepowerflag = 0;
+    }
+    /*update the charging device ID*/
+    else if( HMI_StateValue.chargeridflag == 1 )
+    {
+        API_KnxMem_ReadByte( DEVICE_ID_REF, &ucData );
+        dataTobus[0] = 'A';
+        dataTobus[1] = 'C';
+        dataTobus[2] = 'C';
+        dataTobus[3] = '0';
+        dataTobus[4] = '1';
+
+        for( i = 5; i < 14; i++ )
+        {
+            dataTobus[i] = i + 'A';
+
+        }
+
+        API_KnxAl_SetCoValue( CHARGE_ID_CO, &dataTobus[0] );
+        /* send the switch co-obj's data. */
+        API_KnxAl_RequestValueWrite( CHARGE_ID_CO );
+
+        HMI_StateValue.chargeridflag = 0;
+    }
+
+
+
+
+
+
+
+
 }
 
 WORD32 g_dwTimeStSensor = 0;
@@ -916,6 +1003,24 @@ void UartDataStore( uint8_t *pData, uint16_t Size )
     }
 }
 
-
+/**
+ * @description: swep big-endian or little-endian to another type
+ * @param {none} 
+ * @return: none
+ * @date 2023/9/2
+ * example: swapEndian(&value16, sizeof(value16));
+ */
+void swapEndian(void* data, size_t size)
+{
+    uint8_t* byteData = (uint8_t*)data;
+    uint8_t temp;
+    
+    for (size_t i = 0; i < size / 2; ++i)
+    {
+        temp = byteData[i];
+        byteData[i] = byteData[size - 1 - i];
+        byteData[size - 1 - i] = temp;
+    }
+}
 /* end of file. */
 

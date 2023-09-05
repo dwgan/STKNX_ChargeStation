@@ -22,6 +22,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+  
+#include <stddef.h>
 
 #define OUTPUT_FLASH_TIME          500 /* 500 ms. */
 #define INPUT_CHECK_TIME           50  /* 50ms    */
@@ -53,7 +55,7 @@ extern "C" {
 
 #define ITEMTYPE_CHARGEDENERGY   0x09
 #define ITEMTYPE_DATETIME        0X0A
-#define ITEMTYPE_CURTAINPOSITION 0X0B
+#define ITEMTYPE_CHARGERID       0X0B
 
 
 
@@ -122,7 +124,7 @@ void SendUartStoreData(void);
 void DataConvert_IntToFloat(BYTE *pData);
 void DataConvert_FloatToInt(BYTE *pData);
 void UartDataStore(uint8_t *pData, uint16_t Size);
-
+void swapEndian(void* data, size_t size);
 
 
 #ifdef __cplusplus

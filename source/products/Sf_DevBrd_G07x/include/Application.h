@@ -43,8 +43,8 @@ extern "C" {
 #define CHARGE_TEMPERATURE_CO                   7   /* charge temperature */
 #define CHARGE_ENERGY_CO                        8   /* charged energy**/
 #define DATETIME_CO                             9   /* system date time*/
+#define CHARGE_ID_CO                            10  /* charging point ID */
 
-#define OUT_COM_OBJ_NO_RelativeDimming       10   /* output1 Co. No. *//* 4bit */
 #define OUT_COM_OBJ_NO_AbsoluteDimming       11   /* Absolute dimming *//* 1byte */
 
 #define TEMPERATURE_ABSOLUTE_OBJ_NO          12  /*Temperature Co No*//* 2bytes */

@@ -77,7 +77,7 @@ extern "C" {
 
 /******************* Application parameter size define,User define the next data ****************************/
 /* input channel switch function parameter offset. */
-#define IN1_SWFUNC_TYPE_OFFSET         0
+#define DEVICE_ID_OFFSET               0
 #define IN2_SWFUNC_TYPE_OFFSET         1
 #define IN3_SWFUNC_TYPE_OFFSET         2
 #define IN4_SWFUNC_TYPE_OFFSET         3
@@ -99,7 +99,7 @@ extern "C" {
 
 #define APP_PARA_AREA_REF                 (APP_COM_OBJ_TABLE_REF + COM_OBJ_TABLE_SIZE) /* application parameter start address. */
 /* switch type parameter virtual address define. */
-#define IN1_SWFUNC_TYPE_REF               (APP_PARA_AREA_REF + IN1_SWFUNC_TYPE_OFFSET)     /*  */
+#define DEVICE_ID_REF                     (APP_PARA_AREA_REF + DEVICE_ID_OFFSET)     /*  */
 #define IN2_SWFUNC_TYPE_REF               (APP_PARA_AREA_REF + IN2_SWFUNC_TYPE_OFFSET)     /*  */
 #define IN3_SWFUNC_TYPE_REF               (APP_PARA_AREA_REF + IN3_SWFUNC_TYPE_OFFSET)     /*  */
 #define IN4_SWFUNC_TYPE_REF               (APP_PARA_AREA_REF + IN4_SWFUNC_TYPE_OFFSET)     /*  */
