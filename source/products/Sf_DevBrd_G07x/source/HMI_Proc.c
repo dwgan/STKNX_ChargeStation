@@ -67,6 +67,16 @@ void HMI_Init()
     HMI_StateValue.connectupdateflag=1;
 }
 
+void KNX_Bus_Init()
+{
+    HMI_StateValue.connectupdateflag=1;
+    HMI_StateValue.runningupdateflag=1;
+    HMI_StateValue.batteryupdateflag=1;
+    HMI_StateValue.temperatureflag=1;
+    HMI_StateValue.chargedtimeflag=1;
+    HMI_StateValue.remaintimeflag=1;
+}
+
 /**
  * @description: Get the information from the Battery, this function
        should be called right after the connected battery is detected.
@@ -133,14 +143,14 @@ void Battery_ChargeInfo_Calculate()
         }
     }
     
-//    if ( HMI_StateValue.currentvalue[0] == 0 && HMI_StateValue.currentvalue[1] == 0 )
-//    {
-//        HMI_StateValue.remainchargetime = 0;
-//    }
-//    else
-//    {
-//        HMI_StateValue.remainchargetime = 1 + ( HMI_StateValue.fullcapacity - HMI_StateValue.currentcapacity ) * 60 / ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) / 220;
-//    }
+    if ( HMI_StateValue.currentvalue[0] == 0 && HMI_StateValue.currentvalue[1] == 0 )
+    {
+        HMI_StateValue.remainchargetime = 0;
+    }
+    else
+    {
+        HMI_StateValue.remainchargetime = 1 + ( HMI_StateValue.fullcapacity - HMI_StateValue.currentcapacity ) * 60 / ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) / 220;
+    }
     
     static WORD16 currentValBak;
     if ( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) != currentValBak )
@@ -312,10 +322,10 @@ void HMI_DispInfoChange_Update()
             {
                 HMI_StateValue.chargedtimeflag = 1;
             }
-//            if ( HMI_StateValue.remainchargetime != HMI_StateValue_Backup.remainchargetime )
-//            {
-//                HMI_StateValue.remaintimeflag = 1;
-//            }
+            if ( HMI_StateValue.remainchargetime != HMI_StateValue_Backup.remainchargetime )
+            {
+                HMI_StateValue.remaintimeflag = 1;
+            }
             if ( HMI_StateValue.currentvalue != HMI_StateValue_Backup.currentvalue )
             {
                 HMI_StateValue.currentcapacityupdateflag = 1;
@@ -408,8 +418,8 @@ void HMI_ConnectStatus_Get()
         {
             HMI_StateValue.chargedtime = 0;
             HMI_StateValue.chargedtimeflag = 1;
-//            HMI_StateValue.remaintimeflag = 1;
-//            HMI_StateValue.remainchargetime = 0;
+            HMI_StateValue.remaintimeflag = 1;
+            HMI_StateValue.remainchargetime = 0;
             HMI_StateValue.temperature = 0;
             HMI_StateValue.temperatureflag = 1;
             HMI_StateValue.batterypercent = 0;
@@ -554,6 +564,7 @@ void HMI_UpatePeriodical_Call()
     if (!InitFlag)
     {
         HMI_Init();
+        KNX_Bus_Init();
         InitFlag=TRUE;
     }
     

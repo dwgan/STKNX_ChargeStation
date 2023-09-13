@@ -573,7 +573,16 @@ void Demo_App_ChargeStationValue_Update( void )
         //BYTE runningstatus;
         API_KnxAl_GetCoValue( CHARGE_RUNNING_STATUS_CO, &HMI_StateValue.runningstatus );
         //HMI_StateValue.runningstatus=HMI_StateValue.batterypercent<100?runningstatus:0;
-
+        
+        if (HMI_StateValue.runningstatus)
+        {
+            if ( HMI_StateValue.batterypercent >= 100 )
+            {
+                Battery_Info_Get();
+            }
+            HMI_ResumeCharge();
+        }
+        
         /*send position data to UART PORT  */
         dataToUart[0] = ITEMTYPE_RUNNINGSTATUS;
         dataToUart[1] = 1;
@@ -726,17 +735,17 @@ void Demo_App_ChargeStationValue_Update( void )
 
         HMI_StateValue.chargedtimeflag = 0;
     }
-//    /*update the remaining charge time status*/
-//    else if( HMI_StateValue.remaintimeflag == 1 )
-//    {
-//        dataTobus[1] = HMI_StateValue.remainchargetime & 0xff;
-//        dataTobus[0] = ( HMI_StateValue.remainchargetime >> 8 ) & 0xff;
-//        API_KnxAl_SetCoValue( REMAINING_CHARGE_TIME_CO, &dataTobus[0] );
-//        /* send the switch co-obj's data. */
-//        API_KnxAl_RequestValueWrite( REMAINING_CHARGE_TIME_CO );
-//
-//        HMI_StateValue.remaintimeflag = 0;
-//    }
+    /*update the remaining charge time status*/
+    else if( HMI_StateValue.remaintimeflag == 1 )
+    {
+        dataTobus[1] = HMI_StateValue.remainchargetime & 0xff;
+        dataTobus[0] = ( HMI_StateValue.remainchargetime >> 8 ) & 0xff;
+        API_KnxAl_SetCoValue( REMAINING_CHARGE_TIME_CO, &dataTobus[0] );
+        /* send the switch co-obj's data. */
+        API_KnxAl_RequestValueWrite( REMAINING_CHARGE_TIME_CO );
+
+        HMI_StateValue.remaintimeflag = 0;
+    }
     /*update the temperature status*/
     else if( HMI_StateValue.temperatureflag == 1 )
     {

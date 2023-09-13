@@ -42,8 +42,8 @@ typedef struct HMI_StateValue
     BYTE currentvalue[2];
     BYTE chargedtimeflag;
     WORD16 chargedtime;
-//    BYTE remaintimeflag;
-//    WORD16 remainchargetime;
+    BYTE remaintimeflag;
+    WORD16 remainchargetime;
     BYTE temperatureflag;
     WORD16 temperature;
     BYTE timedata[8];
