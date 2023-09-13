@@ -51,7 +51,7 @@ typedef struct HMI_StateValue
     BYTE chargeenergyflag;
     WORD32 chargepower;
     BYTE chargepowerflag;
-    BYTE chargerid[10];
+    BYTE chargerid[14];
     BYTE chargeridflag;
     
     // internal

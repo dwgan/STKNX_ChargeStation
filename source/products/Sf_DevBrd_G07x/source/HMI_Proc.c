@@ -11,13 +11,15 @@
 #include "Rec_Table.h"
 #include "App_Api.h"
 #include <time.h>
+#include "Knx_M0705.h"
+#include "Knx_InternalData.h"
 
 
 
 /**************************************************************************
 * valuable definition
 **************************************************************************/
-HMI_StateValue_t HMI_StateValue;
+HMI_StateValue_t HMI_StateValue={0};
 
 
 /**
@@ -48,15 +50,21 @@ void HMI_STM32GPIO_Init()
 void HMI_Init()
 {
     HMI_STM32GPIO_Init();
-    uint8_t UartDataBuff[RTXBUFFLEN];
-    unsigned char length;
 
     /*******************update the state to HMI*********************/
-    // update current value to HMI
-    length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d.%dA\"\xff\xff\xff", "t1", \
-                      ( unsigned int )( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) ) / 1000, \
-                      ( unsigned int )( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) ) % 1000 );
-    serialData2Buff_Write( UartDataBuff, length );
+//    uint8_t UartDataBuff[RTXBUFFLEN];
+//    unsigned char length;
+//    // update current value to HMI
+//    length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d.%dA\"\xff\xff\xff", "t1", \
+//                      ( unsigned int )( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) ) / 1000, \
+//                      ( unsigned int )( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) ) % 1000 );
+//    serialData2Buff_Write( UartDataBuff, length );
+    
+    /*******************update the state to KNX Bus*********************/
+    static volatile BYTE* PhyDataAddressPtr = (BYTE*)(VIR_ADDR_TABLE + VIR_TO_REAL_OFFSET+2);
+    sprintf((char*)HMI_StateValue.chargerid,"ACC0%d",*PhyDataAddressPtr);
+    HMI_StateValue.chargeridflag=1;
+    HMI_StateValue.connectupdateflag=1;
 }
 
 /**
@@ -235,7 +243,7 @@ static void HMI_DispInfoStateMachine_Update()
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%dmin\"\xff\xff\xff", "t0", ( unsigned int )HMI_StateValue.chargedtime );
             serialData2Buff_Write( UartDataBuff, length );
             // update remainchargetime to HMI
-            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"ACC01123456789\"\xff\xff\xff", "t3");//, ( unsigned int )HMI_StateValue.remainchargetime );
+            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"ID: %s\"\xff\xff\xff", "t3", HMI_StateValue.chargerid);//, ( unsigned int )HMI_StateValue.remainchargetime );
             serialData2Buff_Write( UartDataBuff, length );
             // update temperature to HMI
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d.%d¡æ\"\xff\xff\xff", "t5", \
@@ -265,7 +273,7 @@ static void HMI_DispInfoStateMachine_Update()
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"- - min\"\xff\xff\xff", "t0" );
             serialData2Buff_Write( UartDataBuff, length );
             // update remainchargetime to HMI
-            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"ACC01123456789\"\xff\xff\xff", "t3" );
+            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"ID: %s\"\xff\xff\xff", "t3", HMI_StateValue.chargerid);
             serialData2Buff_Write( UartDataBuff, length );
             // update temperature to HMI
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d.%d¡æ\"\xff\xff\xff", "t5", \
@@ -541,7 +549,14 @@ void HMI_EventProcess()
 void HMI_UpatePeriodical_Call()
 {
     static WORD32 TimesMsRef;
-
+    static BYTE InitFlag=FALSE;
+    
+    if (!InitFlag)
+    {
+        HMI_Init();
+        InitFlag=TRUE;
+    }
+    
     if ( API_KnxTm_GetDelayMs( TimesMsRef ) >= HMI_LOOP_PERIOD )
     {
         TimesMsRef = API_KnxTm_GetTimeMs();

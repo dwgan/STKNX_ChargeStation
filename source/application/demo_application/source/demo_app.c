@@ -34,6 +34,7 @@
 #include "stm32g0xx_hal_uart.h"
 #include "SerialProc.h"
 #include "HMI_Proc.h"
+#include "string.h"
 
 #define DIMMERVALUEMASK      0X07
 #define RSCUPDOWNMASK        0X08
@@ -513,11 +514,11 @@ void SendUartStoreData( void )
 
 }
 
+BYTE dataToUart[10], dataTobus[14];
 void Demo_App_ChargeStationValue_Update( void )
 {
     BYTE ucData;
 	BYTE timedata[8];
-    static BYTE dataToUart[10], dataTobus[5];
 	SWORD32 energyvalue;
     WORD16 dataconvert;
     u8_t i;
@@ -780,19 +781,8 @@ void Demo_App_ChargeStationValue_Update( void )
     else if( HMI_StateValue.chargeridflag == 1 )
     {
         API_KnxMem_ReadByte( DEVICE_ID_REF, &ucData );
-        dataTobus[0] = 'A';
-        dataTobus[1] = 'C';
-        dataTobus[2] = 'C';
-        dataTobus[3] = '0';
-        dataTobus[4] = '1';
 
-        for( i = 5; i < 14; i++ )
-        {
-            dataTobus[i] = i + 'A';
-
-        }
-
-        API_KnxAl_SetCoValue( CHARGE_ID_CO, &dataTobus[0] );
+        API_KnxAl_SetCoValue( CHARGE_ID_CO, &HMI_StateValue.chargerid[0] );
         /* send the switch co-obj's data. */
         API_KnxAl_RequestValueWrite( CHARGE_ID_CO );
 

@@ -69,7 +69,7 @@ void main( void )
     /*Initializing UART peripherial */
     UARTCtrl_init();
 
-    HMI_Init();
+    //HMI_Init();
 
     while( 1 )
     {
