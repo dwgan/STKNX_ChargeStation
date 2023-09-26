@@ -13,7 +13,8 @@
 #include <time.h>
 #include "Knx_M0705.h"
 #include "Knx_InternalData.h"
-
+#include "stm32g0xx_hal_rcc.h"
+#include "stm32g0xx.h"
 
 
 /**************************************************************************
@@ -32,11 +33,21 @@ HMI_StateValue_t HMI_StateValue={0};
  */
 void HMI_STM32GPIO_Init()
 {
-    HMI_CONNECTED_GPIO->PUPDR |= HMI_CONNECTED_GPIO_PUPDR_PUPDR;
-    HMI_CONNECTED_GPIO->MODER &= ~HMI_CONNECTED_GPIO_MODER_MODER;
+    HMI_CONNECTED_GPIO->PUPDR |= HMI_CONNECTED_GPIO_PUPDR;
+    HMI_CONNECTED_GPIO->MODER &= ~HMI_CONNECTED_GPIO_MODER;
     
-    NFC_TAG_GPIO->PUPDR |= NFC_TAG_GPIO_PUPDR_PUPDR;
-    NFC_TAG_GPIO->MODER &= ~NFC_TAG_GPIO_MODER_MODER;
+    NFC_TAG_GPIO->PUPDR |= NFC_TAG_GPIO_PUPDR;
+    NFC_TAG_GPIO->MODER &= ~NFC_TAG_GPIO_MODER;
+    
+    RCC->IOPENR |= RCC_IOPENR_GPIOCEN;
+
+    LED_S0_GPIO->MODER = GPIO_MODE_MASK_PA_EX;
+    LED_S0_GPIO->PUPDR |= LED_S0_PUPDR;
+    LED_S0_GPIO->MODER   |= LED_S0_MODER;
+    LED_S1_GPIO->PUPDR |= LED_S1_PUPDR;
+    LED_S1_GPIO->MODER   |= LED_S1_MODER;
+    LED_S2_GPIO->PUPDR |= LED_S2_PUPDR;
+    LED_S2_GPIO->MODER   |= LED_S2_MODER;
 }
 
 /**
@@ -205,6 +216,7 @@ void HMI_TimeData_Update()
     serialData2Buff_Write( UartDataBuff, length );
 }
 
+void LED_StatusUpdate(BYTE status);
 /**
  * @description: Update the display of HMI screen periodically
             this function should be called periodically to update the HMI
@@ -226,6 +238,7 @@ static void HMI_DispInfoStateMachine_Update()
         serialData2Buff_Write( UartDataBuff, length );
         length = sprintf( ( char* )UartDataBuff, "%s=%d\xff\xff\xff", "runningstatus", ( unsigned int )( ( HMI_StateValue.runningstatus ) ) );
         serialData2Buff_Write( UartDataBuff, length );
+        LED_StatusUpdate(0);
     }
     else // the power cable is connected
     {
@@ -240,9 +253,9 @@ static void HMI_DispInfoStateMachine_Update()
             length = sprintf( ( char* )UartDataBuff, "%s=%d\xff\xff\xff", "runningstatus", ( unsigned int )( ( HMI_StateValue.runningstatus ) ) );
             serialData2Buff_Write( UartDataBuff, length );
             // update current value to HMI
-            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d.%dA\"\xff\xff\xff", "t1", \
+            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d.%d A\"\xff\xff\xff", "t1", \
                               ( unsigned int )( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) ) / 1000, \
-                              ( unsigned int )( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) ) % 1000 );
+                              ( unsigned int )( ( HMI_StateValue.currentvalue[1] | HMI_StateValue.currentvalue[0] << 8 ) ) % 1000 / 100 );
             serialData2Buff_Write( UartDataBuff, length );
             // update batterypercent to HMI
             length = sprintf( ( char* )UartDataBuff, "%s=%d\xff\xff\xff", "j0val", ( unsigned int )HMI_StateValue.batterypercent );
@@ -250,7 +263,7 @@ static void HMI_DispInfoStateMachine_Update()
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d%%\"\xff\xff\xff", "t4", ( unsigned int )HMI_StateValue.batterypercent );
             serialData2Buff_Write( UartDataBuff, length );
             // update chargedtime to HMI
-            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%dmin\"\xff\xff\xff", "t0", ( unsigned int )HMI_StateValue.chargedtime );
+            length = sprintf( ( char* )UartDataBuff, "%s.txt=\"%d min\"\xff\xff\xff", "t0", ( unsigned int )HMI_StateValue.chargedtime );
             serialData2Buff_Write( UartDataBuff, length );
             // update remainchargetime to HMI
             length = sprintf( ( char* )UartDataBuff, "%s.txt=\"ID: %s\"\xff\xff\xff", "t3", HMI_StateValue.chargerid);//, ( unsigned int )HMI_StateValue.remainchargetime );
@@ -260,6 +273,7 @@ static void HMI_DispInfoStateMachine_Update()
                               ( unsigned int )HMI_StateValue.temperature / 10, \
                               ( unsigned int )HMI_StateValue.temperature % 10 );
             serialData2Buff_Write( UartDataBuff, length );
+            LED_StatusUpdate(2);
         }
         else // the battery is not charging
         {
@@ -290,6 +304,7 @@ static void HMI_DispInfoStateMachine_Update()
                               ( unsigned int )HMI_StateValue.temperature / 10, \
                               ( unsigned int )HMI_StateValue.temperature % 10 );
             serialData2Buff_Write( UartDataBuff, length );
+            LED_StatusUpdate(1);
         }
     }
 }
@@ -462,6 +477,36 @@ void NFC_TAG_Status_Get()
     }
     IO_Value_Backup = IO_Value;
 }
+
+/**
+ * @description: LED_StatusUpdate
+ * @param {type} receive byte
+ * @return: none
+ */
+void LED_StatusUpdate(BYTE status)
+{
+    switch (status)
+    {
+    case 0:
+      LED_S0_SET;
+      LED_S1_RESET;
+      LED_S2_RESET;
+      break;
+    case 1:
+      LED_S0_RESET;
+      LED_S1_SET;
+      LED_S2_RESET;
+      break;
+    case 2:
+      LED_S0_RESET;
+      LED_S1_RESET;
+      LED_S2_SET;
+      break;
+    default:
+      break;
+    }
+}
+
 
 /**
  * @description: HMI_CommandDecoder on serial receive byte interrup

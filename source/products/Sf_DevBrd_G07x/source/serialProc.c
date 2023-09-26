@@ -191,9 +191,9 @@ uint8_t serialBuffData_Send()
     {
         return FALSE;
     }
-    
-    static uint8_t Buff[RTXBUFFLEN]={0};
-    memcpy(Buff,TxBuffMtx.Buff[TxBuffMtx.PosOut].nData,TxBuffMtx.Buff[TxBuffMtx.PosOut].nSize);
+
+    static uint8_t Buff[RTXBUFFLEN] = {0};
+    memcpy( Buff, TxBuffMtx.Buff[TxBuffMtx.PosOut].nData, TxBuffMtx.Buff[TxBuffMtx.PosOut].nSize );
     UartSendData( Buff, TxBuffMtx.Buff[TxBuffMtx.PosOut].nSize );
     memset( TxBuffMtx.Buff[TxBuffMtx.PosOut].nData, 0, RTXBUFFLEN );
     TxBuffMtx.PosOut = TxBuffMtx.PosOut + 1 < RTXBUFFDEEP ? TxBuffMtx.PosOut + 1 : 0;

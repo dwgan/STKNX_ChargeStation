@@ -988,7 +988,7 @@ void UartDataStore( uint8_t *pData, uint16_t Size )
 }
 
 /**
- * @description: swep big-endian or little-endian to another type
+ * @description: swap big-endian or little-endian to another type
  * @param {none} 
  * @return: none
  * @date 2023/9/2

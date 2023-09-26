@@ -8,15 +8,39 @@ extern "C" {
 #include <stdint.h>
 #include "type_def.h"
   
+#define LED_S0_GPIO GPIOC
+#define LED_S1_GPIO GPIOC
+#define LED_S2_GPIO GPIOA
+  
+#define LED_S0_PIN GPIO_PIN_13
+#define LED_S1_PIN GPIO_PIN_15
+#define LED_S2_PIN GPIO_PIN_1
+  
+#define LED_S0_PUPDR GPIO_PUPDR_PUPDR13_0
+#define LED_S1_PUPDR GPIO_PUPDR_PUPDR15_0
+#define LED_S2_PUPDR GPIO_PUPDR_PUPDR0_0
+  
+#define LED_S0_MODER GPIO_MODER_MODER13_0
+#define LED_S1_MODER GPIO_MODER_MODER15_0
+#define LED_S2_MODER GPIO_MODER_MODER1_0
+  
+#define LED_S0_SET         (LED_S0_GPIO->ODR |= LED_S0_PIN)
+#define LED_S0_RESET       (LED_S0_GPIO->ODR &= ~LED_S0_PIN)
+#define LED_S1_SET         (LED_S1_GPIO->ODR |= LED_S1_PIN)
+#define LED_S1_RESET       (LED_S1_GPIO->ODR &= ~LED_S1_PIN)
+#define LED_S2_SET         (LED_S2_GPIO->ODR |= LED_S2_PIN)
+#define LED_S2_RESET       (LED_S2_GPIO->ODR &= ~LED_S2_PIN)
+
+  
 #define HMI_CONNECTED_GPIO                      GPIOB
 #define HMI_CONNECTED_PIN                       GPIO_PIN_8
-#define HMI_CONNECTED_GPIO_PUPDR_PUPDR          GPIO_PUPDR_PUPDR8_0
-#define HMI_CONNECTED_GPIO_MODER_MODER          GPIO_MODER_MODER8_0
+#define HMI_CONNECTED_GPIO_PUPDR                GPIO_PUPDR_PUPDR8_0
+#define HMI_CONNECTED_GPIO_MODER                GPIO_MODER_MODER8_0
   
 #define NFC_TAG_GPIO                      GPIOB
 #define NFC_TAG_PIN                       GPIO_PIN_13
-#define NFC_TAG_GPIO_PUPDR_PUPDR          GPIO_PUPDR_PUPDR13_0
-#define NFC_TAG_GPIO_MODER_MODER          GPIO_MODER_MODER13_0
+#define NFC_TAG_GPIO_PUPDR                GPIO_PUPDR_PUPDR13_0
+#define NFC_TAG_GPIO_MODER                GPIO_MODER_MODER13_0
 
 #define KNX_PowerStateON  0xff
 #define KNX_PowerStateOFF 0x00
