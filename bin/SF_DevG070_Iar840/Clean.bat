@@ -8,7 +8,9 @@ for %%i in (*) do (
         if "%%~xi" neq ".eww" (
             if "%%~xi" neq ".ewd" (
 				if "%%~xi" neq ".bat" (
-					del "%%i"
+					if "%%~xi" neq ".icf" (
+						del "%%i"
+					)
 				)
             )
         )

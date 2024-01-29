@@ -7,3 +7,7 @@ In this project, the HMI control function are realized. The reference document c
 This project is complied using IAR 9.40.1
 
 Note that the Clean.bat is a script for cleaning unnecessary file under this folder for minimizing the size of space usage. Do NOT excecute Clean.bat at other folder to avoid data loss.
+
+## Note
+
+This project is modified to standard STM32CubeMX generated project structure.

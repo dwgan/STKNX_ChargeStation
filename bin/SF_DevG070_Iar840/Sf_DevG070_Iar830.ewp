@@ -349,21 +349,13 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\..\source\pub</state>
-                    <state>$PROJ_DIR$\..\..\source\interface\media\include</state>
-                    <state>$PROJ_DIR$\..\..\source\interface\math\include</state>
-                    <state>$PROJ_DIR$\..\..\source\interface\control\include</state>
-                    <state>$PROJ_DIR$\..\..\source\interface\communication\common\include</state>
-                    <state>$PROJ_DIR$\..\..\source\interface\communication\Knx_protocol_0705_2K_BitChip_Lib\include</state>
-                    <state>$PROJ_DIR$\..\..\source\interface\common_driver\include</state>
-                    <state>$PROJ_DIR$\..\..\source\drivers\AD\STM32G0XXX\include</state>
-                    <state>$PROJ_DIR$\..\..\source\drivers\flash\STM32G0XXX\include</state>
-                    <state>$PROJ_DIR$\..\..\source\drivers\knx_bit_chip\st_knx\STM32F_T1T3\include</state>
-                    <state>$PROJ_DIR$\..\..\source\drivers\systick\Stm32F10XX\include</state>
                     <state>$PROJ_DIR$\..\..\source\application\demo_application\include</state>
                     <state>$PROJ_DIR$\..\..\source\cpus\STM32G0XXX\include</state>
                     <state>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\include</state>
-                    <state>$PROJ_DIR$\..\..\source\drivers\uart\STM32G0XX\include</state>
-                    <state>$PROJ_DIR$\..\..\source\drivers\uart\STM32G0XX\include</state>
+                    <state>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Inc</state>
+                    <state>$PROJ_DIR$\..\..\source\Interface\Inc</state>
+                    <state>$PROJ_DIR$\..\..\source\Core\Inc</state>
+                    <state>$PROJ_DIR$\..\..\source\Drivers\CMSIS\Include</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -780,7 +772,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>C:\Work\Project\STKNX Evaluation &amp;Development Board\FW\STKNX_EvaluationBoard\source\products\Sf_DevBrd_G07x\source\Cpu_resource_cfg.icf</state>
+                    <state>$PROJ_DIR$\Cpu_resource_cfg.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2185,114 +2177,123 @@
         </settings>
     </configuration>
     <group>
-        <name>app</name>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\application\demo_application\source\demo_app.c</name>
-        </file>
+        <name>Core</name>
+        <group>
+            <name>Src</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Src\Application.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Src\Application_Data.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Src\boardctrl.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Src\demo_app.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Src\HMI_Proc.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Src\Main.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Src\serialProc.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Src\stm32f0xx_vector.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Src\system_stm32g0xx.c</name>
+            </file>
+        </group>
+        <group>
+            <name>Startup</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Core\Startup\startup_stm32f0xx.s</name>
+            </file>
+        </group>
     </group>
     <group>
-        <name>cpu</name>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\cpus\STM32G0XXX\source\startup_stm32f0xx.s</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\cpus\STM32G0XXX\source\stm32f10x_iwdg.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\cpus\STM32G0XXX\source\system_stm32g0xx.c</name>
-        </file>
+        <name>Drives</name>
+        <group>
+            <name>STM32G0xx_HAL_Driver</name>
+            <group>
+                <name>Src</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32f10x_iwdg.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32f10xx_systick.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\Stm32g0xx_flash.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_dma.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_rcc.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_uart.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_uart_ex.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\Stm32g0xxx_adc.c</name>
+                </file>
+            </group>
+        </group>
     </group>
     <group>
-        <name>driver</name>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\drivers\systick\Stm32F10XX\source\stm32f10xx_systick.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\drivers\flash\STM32G0XXX\source\Stm32G0XX_Flash.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\cpus\STM32G0XXX\source\stm32g0xx_hal.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\cpus\STM32G0XXX\source\stm32g0xx_hal_dma.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\drivers\uart\STM32G0XX\source\stm32g0xx_hal_rcc.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\drivers\uart\STM32G0XX\source\stm32g0xx_hal_uart.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\drivers\AD\STM32G0XXX\source\Stm32G0xxx_adc.c</name>
-        </file>
-    </group>
-    <group>
-        <name>interface</name>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\common_driver\source\buffer.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\communication\common\source\comm_service.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\common_driver\source\common_driver.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\media\source\common_media.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\control\source\ctrl_service.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\math\source\math_service.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\common_driver\source\mem_malloc.c</name>
-        </file>
-    </group>
-    <group>
-        <name>product</name>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\source\Application.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\source\Application_Data.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\source\boardctrl.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\source\HMI_Proc.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\source\Knx_InternalData.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\source\Knx_Mem.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\source\Main.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\source\serialProc.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\source\stm32f0xx_vector.c</name>
-        </file>
-    </group>
-    <group>
-        <name>protocol</name>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\communication\Knx_protocol_0705_2K_BitChip_Lib\source\App_Api.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\communication\Knx_protocol_0705_2K_BitChip_Lib\source\Knx_Run.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\source\interface\communication\Knx_protocol_0705_2K_BitChip_Lib\source\KnxProp_0705.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\lib\stm32g070cbt6_st_lib_Rx_Pa9_CoTmLimit 20220409 Iar 8.40.2 V 1.04.a</name>
-        </file>
+        <name>Interface</name>
+        <group>
+            <name>Lib</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Lib\stm32g070cbt6_st_lib_Rx_Pa9_CoTmLimit 20220409 Iar 8.40.2 V 1.04.a</name>
+            </file>
+        </group>
+        <group>
+            <name>Src</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\App_Api.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\buffer.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\comm_service.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\common_driver.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\common_media.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\ctrl_service.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\Knx_InternalData.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\Knx_Mem.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\Knx_Run.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\KnxProp_0705.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\math_service.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\source\Interface\Src\mem_malloc.c</name>
+            </file>
+        </group>
     </group>
 </project>
