@@ -348,14 +348,10 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\..\source\pub</state>
-                    <state>$PROJ_DIR$\..\..\source\application\demo_application\include</state>
-                    <state>$PROJ_DIR$\..\..\source\cpus\STM32G0XXX\include</state>
-                    <state>$PROJ_DIR$\..\..\source\products\Sf_DevBrd_G07x\include</state>
-                    <state>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Inc</state>
-                    <state>$PROJ_DIR$\..\..\source\Interface\Inc</state>
-                    <state>$PROJ_DIR$\..\..\source\Core\Inc</state>
-                    <state>$PROJ_DIR$\..\..\source\Drivers\CMSIS\Include</state>
+                    <state>$PROJ_DIR$\..\Drivers\STM32G0xx_HAL_Driver\Inc</state>
+                    <state>$PROJ_DIR$\..\Interface\Inc</state>
+                    <state>$PROJ_DIR$\..\Core\Inc</state>
+                    <state>$PROJ_DIR$\..\Drivers\CMSIS\Include</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2181,37 +2177,37 @@
         <group>
             <name>Src</name>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Src\Application.c</name>
+                <name>$PROJ_DIR$\..\Core\Src\Application.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Src\Application_Data.c</name>
+                <name>$PROJ_DIR$\..\Core\Src\Application_Data.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Src\boardctrl.c</name>
+                <name>$PROJ_DIR$\..\Core\Src\boardctrl.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Src\demo_app.c</name>
+                <name>$PROJ_DIR$\..\Core\Src\demo_app.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Src\HMI_Proc.c</name>
+                <name>$PROJ_DIR$\..\Core\Src\HMI_Proc.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Src\Main.c</name>
+                <name>$PROJ_DIR$\..\Core\Src\Main.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Src\serialProc.c</name>
+                <name>$PROJ_DIR$\..\Core\Src\serialProc.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Src\stm32f0xx_vector.c</name>
+                <name>$PROJ_DIR$\..\Core\Src\stm32f0xx_vector.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Src\system_stm32g0xx.c</name>
+                <name>$PROJ_DIR$\..\Core\Src\system_stm32g0xx.c</name>
             </file>
         </group>
         <group>
             <name>Startup</name>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Core\Startup\startup_stm32f0xx.s</name>
+                <name>$PROJ_DIR$\..\Core\Startup\startup_stm32f0xx.s</name>
             </file>
         </group>
     </group>
@@ -2222,28 +2218,28 @@
             <group>
                 <name>Src</name>
                 <file>
-                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32f10x_iwdg.c</name>
+                    <name>$PROJ_DIR$\..\Drivers\STM32G0xx_HAL_Driver\Src\stm32f10x_iwdg.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32f10xx_systick.c</name>
+                    <name>$PROJ_DIR$\..\Drivers\STM32G0xx_HAL_Driver\Src\stm32f10xx_systick.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\Stm32g0xx_flash.c</name>
+                    <name>$PROJ_DIR$\..\Drivers\STM32G0xx_HAL_Driver\Src\Stm32g0xx_flash.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_dma.c</name>
+                    <name>$PROJ_DIR$\..\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_dma.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_rcc.c</name>
+                    <name>$PROJ_DIR$\..\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_rcc.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_uart.c</name>
+                    <name>$PROJ_DIR$\..\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_uart.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_uart_ex.c</name>
+                    <name>$PROJ_DIR$\..\Drivers\STM32G0xx_HAL_Driver\Src\stm32g0xx_hal_uart_ex.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\source\Drivers\STM32G0xx_HAL_Driver\Src\Stm32g0xxx_adc.c</name>
+                    <name>$PROJ_DIR$\..\Drivers\STM32G0xx_HAL_Driver\Src\Stm32g0xxx_adc.c</name>
                 </file>
             </group>
         </group>
@@ -2253,46 +2249,46 @@
         <group>
             <name>Lib</name>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Lib\stm32g070cbt6_st_lib_Rx_Pa9_CoTmLimit 20220409 Iar 8.40.2 V 1.04.a</name>
+                <name>$PROJ_DIR$\..\Interface\Lib\stm32g070cbt6_st_lib_Rx_Pa9_CoTmLimit 20220409 Iar 8.40.2 V 1.04.a</name>
             </file>
         </group>
         <group>
             <name>Src</name>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\App_Api.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\App_Api.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\buffer.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\buffer.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\comm_service.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\comm_service.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\common_driver.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\common_driver.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\common_media.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\common_media.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\ctrl_service.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\ctrl_service.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\Knx_InternalData.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\Knx_InternalData.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\Knx_Mem.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\Knx_Mem.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\Knx_Run.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\Knx_Run.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\KnxProp_0705.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\KnxProp_0705.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\math_service.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\math_service.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\source\Interface\Src\mem_malloc.c</name>
+                <name>$PROJ_DIR$\..\Interface\Src\mem_malloc.c</name>
             </file>
         </group>
     </group>
